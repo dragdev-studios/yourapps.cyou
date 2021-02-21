@@ -169,7 +169,7 @@ async def update_time(req: fastapi.Request):
     def verify_signature(body):
         received_sign = req.headers.get('X-Hub-Signature').split('sha1=')[-1].strip()
         with open("./config.json") as file:  # this is actually just plain-text
-            secret = file().read().strip('"').encode()
+            secret = file.read().strip('"').encode()
         expected_sign = HMAC(key=secret, msg=body, digestmod=sha1).hexdigest()
         return compare_digest(received_sign, expected_sign)
     if not verify_signature(await req.body()):
