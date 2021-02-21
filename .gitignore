@@ -4,3 +4,4 @@ __pycache__
 data.base
 *.sh
 *.bat
+config.json

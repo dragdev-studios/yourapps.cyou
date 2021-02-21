@@ -161,6 +161,9 @@ def get_reviews_pairs(request: fastapi.Request, bot: int = 619328560141697036, l
         pairs
     )
 
+@app.post("/push", include_in_schema=False)
+async def update_time(req: fastapi.Request):
+    pass
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", forwarded_allow_ips="*", proxy_headers=True, port=9126)
