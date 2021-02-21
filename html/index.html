@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>YourApps</title>
+	<meta charset="utf-8">
+	<meta property="og:title" content="YourApps - Home" />
+	<meta property="og:site_name" content="YourApps" />
+	<meta property="og:description" content="YourApps is the newest, most reliable and feature-rich discord application bot to date. Improving on other applicaiton bots, YourApps perfectly balances reliability, with free content & features. Come check us out, make your life easier!"
+	/>
+	<meta property="og:type" content="website" />
+	<meta name="theme-color" content="#7289DA" />
+	<meta name="description" content="YourApps is the newest, most reliable and feature-rich discord application bot to date. Improving on other applicaiton bots, YourApps perfectly balances reliability, with free content & features. Come check us out, make your life easier! This large partner program allows larger servers to easily scale up their applications, making yourapps even faster and easier to use for larger, more active servers."
+	/>
+	<meta name="keywords" content="your,apps,yourapps,discord,discordbot,bot,application,bot,app,bot,appbot,applicationbot" />
+	<link rel="stylesheet" href="/html/css.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Cache-Control" content="max-age=86400" />
+	<script src="https://kit.fontawesome.com/967cead6cd.js" crossorigin="anonymous">
+	</script>
+	<link rel="preconnect" href="https://ya.clicksminuteper.net" />
+	<script>
+		function redirect(url){window.location.href=url;};
+        var rotation=0;
+        var updater;
+
+        function coolLookingIntegerScroller(max=1, element_id, from=0) {
+            let count = from;
+            let interval;
+            let element = document.querySelector(element_id);
+            function inner() {
+                if(count>=max) {
+                    clearInterval(interval);
+                    if(!updater){updater=setInterval(()=>{scroller()}, 10000);};
+                    return;
+                };
+                count++;
+                element.innerText = count;
+            };
+            interval = setInterval(()=>{inner()}, 1);
+        };
+        
+        function updateScroller(new_max, element_id, name) {
+            let element = document.querySelector(element_id);
+            name = name || element_id;
+            let original = element.innerText*1;
+            let max = new_max;
+            if(original===new_max) {
+                console.debug('['+name+'] '+"Not updating scroller " + element_id + ", original ("+original+") is the same as new.");
+                return;
+            }
+            else {
+                let diff = (new_max-original)*1;
+                let interval;
+                
+                if(diff<original) {
+                    console.debug('['+name+'] '+`The difference (${diff}) is smaller than original (${original}).`);
+                    function inner() {
+                        if(count<=max) {
+                            clearInterval(interval);
+                            return;
+                        };
+                        count-=1;
+                        element.innerText = count;
+                    };
+                }
+                else {
+                    console.debug('['+name+'] '+`The difference (${diff}) is larger than original (${original}).`);
+                    function inner() {
+                        if(count>=max) {
+                            clearInterval(interval);
+                            return;
+                        };
+                        count++;
+                        element.innerText = count;
+                    };
+                };
+                interval = setInterval(()=>{inner()}, 1)
+            };
+        };
+
+        function scroller() {
+            coolLookingIntegerScroller(0, "#stats_servers");
+            coolLookingIntegerScroller(0, "#stats_positions");
+            coolLookingIntegerScroller(0, "#stats_random")
+            async function _interval() {
+                let response = await fetch("https://ya.clicksminuteper.net/api/v1/bot/stats");
+                if(!response.ok) {
+                    console.warn("Unable to update scrollers - FETCH response was not OK.");
+                    return;
+                };
+                let json = await response.json();
+                updateScroller(json.guilds, "#stats_servers");
+                updateScroller(json.positions, "#stats_positions");
+                updateScroller(Math.floor(Math.random()*10), "#stats_random");
+            };
+            _interval()
+        };
+
+        window.addEventListener("load", () =>{
+            console.log("load");
+            fetch("https://ya.clicksminuteper.net/api/v1/bot/stats").then(
+                (r)=>{r.json().then(
+                        (json)=>{
+                            coolLookingIntegerScroller(json.guilds, "#stats_servers");
+                            coolLookingIntegerScroller(json.positions, "#stats_positions");
+                        }
+                    )
+                }
+            )
+        });
+        
+	</script>
+	<style>
+		div.card {
+			background-color: #757575;
+			color: #fff;
+			border-radius: 6px;
+			padding: .5rem 4rem 2rem;
+			font-weight: 400;
+			box-shadow: 5px 5px 2.5px 0 #494949;
+			max-width: 75%;
+			max-height: 33%;
+			min-height: 5%;
+			min-width: 25%;
+			margin: 8px
+		}
+
+		div.card.left {
+			text-align: left;
+		}
+
+		div.card.right {
+			text-align: right;
+		}
+
+		iframe {
+			max-height: 315px;
+			max-width: 560px;
+		}
+
+		@media only screen and (max-width: 720px) {
+			iframe {
+				max-width: 50%;
+			}
+		}
+
+		@media only screen and (max-width: 560px) {
+			iframe {
+				display: none;
+			}
+			iframe::before {
+				content: '<p>Click to view</p>'
+			}
+		}
+	</style>
+	<script src="/html/js/lazysizes.min.js"></script>
+</head>
+
+<body style="text-align: center;min-height: 100%">
+	<noscript style="min-height: 100%">
+		<h1 style="color: red"><em>This page is very dynamic, and works a lot better with javascript enabled. While you can continue to use this site with javascript disabled, you should enable it.</em></h1><hr></noscript>
+	<h1 style="text-align:center">YourApps</h1>
+	<div style="text-align:center">
+		<img src="/html/assets/lowresya.jpeg" class="avatar notloaded" id="icon" style="transform: rotate(0turn);transition: transform 0.5s ease-in-out;cursor:help" alt="yourapps" onclick="rotation+=0.01;this.style.transform=`rotate(${rotation}turn)`;" ondblclick="rotation+=0.1;this.style.transform=`rotate(${rotation}turn)`"/><br>
+            <p id="count">800 servers!</p><br>
+            <div>
+                <h3 style="text-align: middle">Quick Links</h3>
+                <br>
+                <button>
+                    <a href="/invite?ref=index_top">
+                        <i class="fas fa-plus"></i> Invite Bot
+                    </a>
+                </button>
+                <button>
+                    <a href="/support">
+                        <i class="fas fa-headset"></i> Bot Support
+                    </a>
+                </button>
+                <button>
+                    <a href="//top.gg/bot/619328560141697036/vote">
+                        <i class="fas fa-arrow-circle-up"></i> Vote for YourApps
+                    </a>
+                </button>
+                <button>
+                    <a href="//status.dragdev.xyz/report/uptime/5bc2276de4d9052a5d60ad50c76c7895/">
+                        <i class="fas fa-server"></i>
+                        API Status
+                    </a>
+                </button>
+                <button>
+                    <a href="/commands">
+                        <i class="fas fa-clipboard-list"></i> Commands List
+                    </a>
+                </button>
+                <button>
+                    <a href="/html/large-partner.html">
+                       <i class="fas fa-users"></i> <em>Large Partner Program</em>
+                    </a>
+                </button>
+                <h3 style="text-align: middle">Site Admins</h3>
+                <p>while everyone can access these, only site admins would really be interested</p>
+                <button>
+                    <a href="/html/stats.html">
+                        <i class="fas fa-info-circle"></i> Statistics
+                    </a>
+                </button>
+                <button>
+                    <a href="//ya.clicksminuteper.net/api/docs">
+                        <i class="fas fa-book"></i> API Documentation
+                    </a>
+                </button>
+                <button>
+                    <a href="/html/env.access.txt">
+                        <i class="fas fa-lock"></i> Security
+                    </a>
+                </button>
+            </div>
+    </div><br><br><br><br><br><br>
+    <hr>
+    <div id="users">
+        <h2>Don't take our word for it!</h2>
+        <p>You can see some statistics below, showing just how many users rely on us for day-to-day business!</p>
+        <div style="display: flex;justify-content: space-evenly;">
+            <div>
+                <h4>Total Servers:</h4>
+                <p id="stats_servers">Loading</p>
+            </div>
+            <div>
+                <h4>Total Positions:</h4>
+                <p id="stats_positions">Loading</p>
+            </div>
+            <div>
+                <h4>Random Integer:</h4>
+                <p id="stats_random">0</p>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div id="features">
+        <h1 style="text-align: center">What is & why YourApps?</h1>
+        <p>YourApps is a new, powerful, top-of-the-range application bot designed to streamline the process of getting staff for your servers.</p>
+        <p>With simple setup and usage, yourapps is <em>44% faster than using google forms</em><span style="font-size: 8px">*</span>, meaning you can get staff faster than ever</p>
+        <br><br>
+        <p style="text-align: middle"><em>Here's just some of our features:</em></p>
+        <div class="card left" style="margin-left: 2rem;max-width:75%">
+            <h2 style="vertical-align: middle">Simple, interactive setup.</h2>
+            <p>Yourapps' setup command (<code class="inline">ya?config new</code>) is entirely interactive, and guides you through creating a new application, step by step!</p>
+            <a href="/html/assets/f1.gif" class="cap"><img src="/html/assets/f1-thumb.png"  data-src="/html/assets/f1.gif" class="gif lazyload" loading="lazy" alt="Gif showing the setup process"/></a>
+        </div><br>
+        <div class="card right" style="margin-left: 2rem;max-width:75%">
+            <h2 style="vertical-align: middle">Applying should be simple...</h2>
+            <p style="text-align: center">Literally just one command. Thats all it takes to apply. <em>We even have "appbuttons" (below), which means you don't even need to type a command to apply!</em> Just react to a message, and the bot starts applying!</p>
+            <a href="/html/assets/f2.gif" class="cap"><img src="/html/assets/f2-thumb.png"  data-src="/html/assets/f2.gif" class="gif lazyload" loading="lazy" alt="Gif showing the apply command"/></a>
+        </div>
+        <div class="card left" style="margin-left: 2rem;max-width:75%">
+            <h2 style="vertical-align: middle">reviewing, made easier.</h2>
+            <p style="text-align: center">The review command is also entirely interactive, and handles all the messy stuff for you. All you have to do is read the submission, and hit one of four emojis, and the bot handles the rest (DMing the user their approval status, assinging/removing roles, etc)!</p>
+            <a href="/html/assets/f3.gif" class="cap"><img src="/html/assets/f3-thumb.png"  data-src="/html/assets/f3.gif" class="gif lazyload" loading="lazy" alt="Gif showing the review command"/></a>
+        </div>
+        <div class="card right" style="margin-left: 2rem;max-width:75%;float:middle!important">
+            <h2 style="vertical-align: middle">Like we said, applying should be simple!</h2>
+            <p style="text-align: center">So simple in fact, that all you have to is click a button! No keyboard usage required!</p>
+            <a href="/html/assets/f4.gif" class="cap"><img src="/html/assets/f4-thumb.png"  data-src="/html/assets/f4.gif" class="gif lazyload" loading="lazy" alt="Gif showing appbuttons"/></a>
+        </div>
+        <br>
+    </div>
+    <div>
+        <button>
+            <a href="/invite?ref=index">
+                <h1>Why wait? Invite now!</h1>
+            </a>
+        </button>
+    </div>
+    <hr>
+    <h2>What some of our users said about us:</h2>
+    <!-- <a href="https://top.gg/bot/619328560141697036#reviews"> -->
+        <!-- temporarily disabled. -->
+        <!--
+            <iframe src="https://top.gg/bot/619328560141697036#reviews" height="315" width="560" allowfullscreen="" frameborder="0">You need to get a better browser that supports iframes, man.</iframe>
+        -->
+    <!-- </a> -->
+    <iframe src="/ratings?parital=false" width="100%" height="800px">Imagine not having iframes</iframe>
+    <script>            
+        function setServers() {
+            fetch("https://ya.clicksminuteper.net/api/guilds.len").then(
+                (r) => {
+                    r.json().then((j) =>
+                        {
+                            document.getElementById("count").innerHTML = j.count+" servers!"
+                        }
+                    )
+                }
+            )
+        }
+        setServers();
+        fetch("https://ya.clicksminuteper.net/api/bot/icon").then(
+            (r) => {
+                r.json().then(
+                    (data)=>{
+                        let ic = document.getElementById("icon")
+                        ic.src = data.url;
+                        ic.classList.remove("notloaded")
+                    }
+                )
+            }
+        ).catch();
+    </script>
+</body>
+</html>
