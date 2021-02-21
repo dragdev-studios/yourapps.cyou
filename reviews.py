@@ -35,13 +35,15 @@ def soupify(html: str):
     return BeautifulSoup(html, "html.parser")
 
 
-def find_reviews_section(soup, string: bool = True):
+def find_reviews_section(soup, string: bool = True, clean_hidden: bool = True):
     results = soup.find_all("div", "reviews__wrapper")
     if not results:
         return soup.prettify()
     if not string:
         return results[0]
     found = str(results[0])
+    if clean_hidden:
+        found = found.replace("opacity:0;", "")
     return found
 
 

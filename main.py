@@ -4,7 +4,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 import uvicorn
 import requests
 from datetime import datetime
-import os
+import re
 
 # from dash import app as dash
 from staticfiles import StaticFiles
@@ -124,7 +124,7 @@ def robots():
     return fastapi.responses.RedirectResponse("/html/robots.txt", 308)
 
 
-def _get_reviews(request, bot, partial, **kwargs):
+def _get_reviews(request, bot, **kwargs):
     headers = dict(request.headers)
     headers.pop("accept-encoding", None)
     headers.pop("host", None)
@@ -140,21 +140,22 @@ def _get_reviews(request, bot, partial, **kwargs):
 
 @app.get("/reviews", include_in_schema=False)
 @app.get("/ratings")
-def get_reviews(request: fastapi.Request, bot: int = 619328560141697036, partial: bool = True):
-    reviews = _get_reviews(request, bot, partial)
+def get_reviews(request: fastapi.Request, bot: int = 619328560141697036, partial: bool = False):
+    reviews = _get_reviews(request, bot)
     if partial:
         return fastapi.responses.HTMLResponse(reviews, 200, {"Cache-Control": "max-age=3600"})
     with open("./template.html") as rfile:
         doc = rfile.read()
     doc = doc.format(reviews)
+    doc = re.sub(r"opacity:[\s]?0[;]?", "", doc)
     return fastapi.responses.HTMLResponse(doc, 200)
 
 @app.get("/reviews/pairs", include_in_schema=False)
 @app.get("/ratings/pairs")
-def get_reviews_pairs(request: fastapi.Request, bot: int = 619328560141697036, partial: bool = True, limit: int = 50):
+def get_reviews_pairs(request: fastapi.Request, bot: int = 619328560141697036, limit: int = 50):
     if limit == -1:
         limit = 999_999_999_999
-    soup = _get_reviews(request, bot, partial, return_soup=True)
+    soup = _get_reviews(request, bot, return_soup=True)
     pairs = reviews.pair_reviews(soup, limit)
     return fastapi.responses.JSONResponse(
         pairs

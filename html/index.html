@@ -16,10 +16,11 @@
 	<link rel="stylesheet" href="/html/css.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Cache-Control" content="max-age=86400" />
-	<script src="https://kit.fontawesome.com/967cead6cd.js" crossorigin="anonymous">
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	<script src="https://kit.fontawesome.com/967cead6cd.js" crossorigin="anonymous" type="text/babel"> 
 	</script>
 	<link rel="preconnect" href="https://ya.clicksminuteper.net" />
-	<script>
+	<script type="text/babel">
 		function redirect(url){window.location.href=url;};
         var rotation=0;
         var updater;
@@ -154,7 +155,7 @@
 			}
 		}
 	</style>
-	<script src="/html/js/lazysizes.min.js"></script>
+	<script src="/html/js/lazysizes.min.js" type="text/babel"></script>
 </head>
 
 <body style="text-align: center;min-height: 100%">
@@ -162,7 +163,7 @@
 		<h1 style="color: red"><em>This page is very dynamic, and works a lot better with javascript enabled. While you can continue to use this site with javascript disabled, you should enable it.</em></h1><hr></noscript>
 	<h1 style="text-align:center">YourApps</h1>
 	<div style="text-align:center">
-		<img src="/html/assets/lowresya.jpeg" class="avatar notloaded" id="icon" style="transform: rotate(0turn);transition: transform 0.5s ease-in-out;cursor:help" alt="yourapps" onclick="rotation+=0.01;this.style.transform=`rotate(${rotation}turn)`;" ondblclick="rotation+=0.1;this.style.transform=`rotate(${rotation}turn)`"/><br>
+		<img src="/html/assets/lowresya.jpeg" class="avatar notloaded" id="icon" alt="yourapps" /><br>
             <p id="count">800 servers!</p><br>
             <div>
                 <h3 style="text-align: middle">Quick Links</h3>
@@ -281,7 +282,7 @@
         -->
     <!-- </a> -->
     <iframe src="/ratings?parital=false" width="100%" height="800px">Imagine not having iframes</iframe>
-    <script>            
+    <script type="text/babel">            
         function setServers() {
             fetch("https://ya.clicksminuteper.net/api/guilds.len").then(
                 (r) => {
