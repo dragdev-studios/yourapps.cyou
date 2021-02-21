@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 import fastapi
-from starlette.exceptions import HTTPException as StarletteHTTPException
 import uvicorn
 import requests
 from datetime import datetime
 import re
+from subprocess import run
 
 # from dash import app as dash
 from staticfiles import StaticFiles
@@ -174,7 +174,9 @@ async def update_time(req: fastapi.Request):
         return compare_digest(received_sign, expected_sign)
     if not verify_signature(await req.body()):
         return fastapi.responses.Response(None, 403)
-    return fastapi.responses.Response()
+    run("git fetch;git pull origin master")
+    exit()
+    # return fastapi.responses.Response()
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", forwarded_allow_ips="*", proxy_headers=True, port=9126)
