@@ -15,6 +15,7 @@ from starlette.background import BackgroundTask
 import traceback
 from hmac import HMAC, compare_digest
 from hashlib import sha1
+import sys
 
 app = FastAPI()
 app.mount("/html", StaticFiles(directory="html", html=True), name="static")
@@ -163,6 +164,7 @@ def get_reviews_pairs(request: fastapi.Request, bot: int = 619328560141697036, l
         pairs
     )
 
+
 @app.post("/push", include_in_schema=False)
 async def update_time(req: fastapi.Request):
     # Thank god for https://stackoverflow.com/q/59580376/13202421
@@ -174,9 +176,10 @@ async def update_time(req: fastapi.Request):
         return compare_digest(received_sign, expected_sign)
     if not verify_signature(await req.body()):
         return fastapi.responses.Response(None, 403)
-    run("git fetch;git pull origin master")
-    exit()
-    # return fastapi.responses.Response()
+    run("git fetch", shell=True)
+    run("git pull origin master", shell=True)
+    run("pm2 restart yourapps.cyou", shell=True)
+    return fastapi.responses.Response()
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", forwarded_allow_ips="*", proxy_headers=True, port=9126)
