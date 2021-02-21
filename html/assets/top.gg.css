@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,700");
 
-.entity-header__short-description[data-theme="dark"] {
+.entity-header__short-description {
     color: #ccc;
 }
 
@@ -28,7 +28,7 @@ main > img {
     border: 1px solid black;
 }
 
-.cIdQeE, .cEhIlR {  /* Review Stars */
+.cIdQeE, .cEhIlR, .cEhIlR {  /* Review Stars */
     fill: #ffac33;
     stroke: none
 }
@@ -43,4 +43,8 @@ main > img {
 
 .hoverable {
     border-radius: 24px;
+}
+
+.igmEZi {
+    background: #ff0000 !important
 }
