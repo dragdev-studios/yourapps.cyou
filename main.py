@@ -89,6 +89,8 @@ def invitebot(ref: str = "No Referrer", dnt: int = fastapi.Header(0), perms: int
         f"https://discord.com/oauth2/authorize?client_id=619328560141697036"
         f"&scope=bot%20guilds.join%20identify&permissions={perms}&response_type=code&redirect_uri=https%3A%2F%2Fya.clicksminuteper.net%2Fcallbacks%2Fauthorized"
     )
+    async def bg():
+        pass  # prevent nameerror
     if not dnt:
         # we only query the database if they're allowing tracking. It's not really tracking but whatever, we'll be nice.
         async def bg():

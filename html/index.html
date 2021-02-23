@@ -87,7 +87,7 @@
             async function _interval() {
                 let response = await fetch("https://ya.clicksminuteper.net/api/v1/bot/stats");
                 if(!response.ok) {
-                    console.warn("Unable to update scrollers - FETCH response was not OK.");
+                    console.warn("Unable to update scrollers - FETCH response was not OK.");  // mood
                     return;
                 };
                 let json = await response.json();
