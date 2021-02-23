@@ -93,6 +93,8 @@ def invitebot(ref: str = "No Referrer", dnt: int = fastapi.Header(0), perms: int
         # we only query the database if they're allowing tracking. It's not really tracking but whatever, we'll be nice.
         async def bg():
             async with aiosqlite.connect("./data.base") as conn:
+                await conn.execute("CREATE TABLE IF NOT EXISTS referrers (id TEXT PRIMARY KEY NOT NULL, referrals INT DEFAULT 0);")
+                await conn.commit()
                 try:
                     cursor = await conn.execute("SELECT (id, referrals) FROM referrers WHERE id=?", ref.lower())
                     referrer, referrals = await cursor.fetchone()
