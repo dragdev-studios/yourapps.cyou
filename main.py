@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 import fastapi
+from starlette.responses import RedirectResponse
 import uvicorn
 import requests
 from datetime import datetime
@@ -184,6 +185,8 @@ async def update_time(req: fastapi.Request):
     run("git pull origin master", shell=True)
     run("pm2 restart yourapps.cyou", shell=True)
     return fastapi.responses.Response()
+
+app.add_api_route("/stylesheets/darktheme.css", lambda: fastapi.responses.RedirectResponse("//top.gg/stylesheets/darktheme.css", 308))
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", forwarded_allow_ips="*", proxy_headers=True, port=9126)
