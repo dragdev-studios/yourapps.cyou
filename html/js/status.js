@@ -95,6 +95,6 @@ async function query_status(shard_id=-1) {
 
 window.addEventListener(
     "load",
-    () => {window.timer = setInterval(query_status, 5000)},
+    () => {query_status().then(() => {window.timer = setInterval(query_status, 5000)})},
     {capture: false}
 );
