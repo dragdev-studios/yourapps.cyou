@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>YourApps</title>
+	<meta charset="utf-8">
+	<meta property="og:title" content="YourApps - Home" />
+	<meta property="og:site_name" content="YourApps" />
+	<meta property="og:description" content="YourApps is the newest, most reliable and feature-rich discord application bot to date. Improving on other applicaiton bots, YourApps perfectly balances reliability, with free content & features. Come check us out, make your life easier!"
+	/>
+	<meta property="og:type" content="website" />
+	<meta name="theme-color" content="#7289DA" />
+	<meta name="description" content="YourApps is the newest, most reliable and feature-rich discord application bot to date. Improving on other applicaiton bots, YourApps perfectly balances reliability, with free content & features. Come check us out, make your life easier! This large partner program allows larger servers to easily scale up their applications, making yourapps even faster and easier to use for larger, more active servers."
+	/>
+	<meta name="keywords" content="your,apps,yourapps,discord,discordbot,bot,application,bot,app,bot,appbot,applicationbot" />
+	<link rel="stylesheet" href="/html/css.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Cache-Control" content="max-age=86400" />
+	<script src="https://kit.fontawesome.com/967cead6cd.js" crossorigin="anonymous" type="application/javascript"> 
+	</script>
+	<link rel="preconnect" href="https://ya.clicksminuteper.net" />
+    <script src="/html/js/index.js" type="application/javascript"></script>
+    <!-- The index.js import is only for the warning function because i cant be bothered porting -->
+    <script src="/html/js/status.js" type="application/javascript"></script>
+    <style>
+        .StatusBox {
+            width: 64px; 
+            height: 64px; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: center;
+        }
+        .StatusBox-noSize {
+            min-width: 64px; 
+            height: auto; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: center;
+        }
+        ._5 {
+            border: 2px solid #43b581; 
+        }
+        ._2 {
+            border: 2px solid #f1c40f;
+        }
+        ._1 {
+            border: 2px solid #d64141;
+        }
+        ._0 {
+            border: 2px solid #b9bbbe
+        }
+
+    </style>
+</head>
+
+<body>
+    <div style="margin-bottom: 10vh">
+        Key:
+        <div class="StatusBox-noSize _5">
+            online (Functioning as normal)
+        </div>
+        <div class="StatusBox-noSize _2">
+            degraded (may be slow or have increased failures)
+        </div>
+        <div class="StatusBox-noSize _1">
+            Severely degraded performance (will be visibly slow and commands have a higher likelyhood of just failing)
+        </div>
+        <div class="StatusBox-noSize _0">
+            Offline (Does not mean it isn't trying to redirect)
+        </div>
+        <br>
+        This page updates automatically every 5 seconds.
+    </div>
+    <div id="statuses" style="display: flex;justify-content: center;">
+    </div>
+</body>
+</html>

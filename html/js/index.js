@@ -5,9 +5,15 @@ async function fetch_json(url, init) {
     return data;
 };
 
-function createWarning(e) {
+function createWarning(e, fatal = false) {
+    if(fatal) {
+        var pre = "Fatal"
+    }
+    else {
+        var pre = "Non-fatal"
+    }
     let warning = document.createElement("div");
-    warning.innerHTML = 'Non-fatal error: ' + '<code class="inline">{}</code>'.replace('{}', e) + "<br>Some of the site may not function as intended.";
+    warning.innerHTML = pre + ' error: ' + '<code class="inline">{}</code>'.replace('{}', e) + "<br>Some of the site may not function as intended.";
     warning.style.color = "#fff";
     warning.style.border = "1px solid black";
     warning.style.backgroundColor = "#f04747";
@@ -47,5 +53,3 @@ async function setIcon() {
         return createWarning(e);
     };
 }
-
-window.addEventListener("load", () => {setServers(); setIcon()}, {capture: false});
