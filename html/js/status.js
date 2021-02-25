@@ -44,6 +44,8 @@ function createBox(id, status) {
 };
 
 async function query_status(shard_id=-1) {
+    const loading = document.createElement("p");
+    loading.textContent = "Loading ...";
     var online = 0;
     try {
         const response = await fetch(BASE+"/status?shard="+shard_id);
@@ -73,6 +75,7 @@ async function query_status(shard_id=-1) {
     } 
     catch (e) {
         // createWarning(e, false);
+        console.error(e);
         data = {"shards": {}};
         for(let i=0;i<last_shard_count;i++) {
             data.shards[i.toString()] = {
@@ -86,8 +89,8 @@ async function query_status(shard_id=-1) {
             createBox(key, data.shards[key].status)
             console.debug(key, data.shards[key])
         }
-        return;
     };
+    loading.remove();
 }
 
 window.addEventListener(
