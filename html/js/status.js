@@ -1,4 +1,5 @@
 var last_shard_count = 1;
+var BASE = "//ya.clicksminuteper.net";  // DO NOT CHANGE THIS unless you're experimenting.
 function createBox(id, status) {
     const statuses = {
         "0": {
@@ -45,7 +46,7 @@ function createBox(id, status) {
 async function query_status(shard_id=-1) {
     var online = 0;
     try {
-        const response = await fetch("http://localhost:9123/status?shard"+shard_id);
+        const response = await fetch(BASE+"/status?shard="+shard_id);
         var data;
         if([500, 501, 502, 503, 504].includes(response.status)) {
             data = {"shards": {}};
