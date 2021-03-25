@@ -1,0 +1,230 @@
+:root {
+    --header-primary: #000;
+    --header-secondary: #666;
+    --text-normal: #202020;
+    --text-muted: #72767d;
+    --text-link: #00b0f4;
+    --channels-default: #8e9297;
+    --interactive-normal: #b9bbbe;
+    --interactive-hover: #dcddde;
+    --interactive-active: #fff;
+    --interactive-muted: #4f545c;
+    --background-primary: #f5f5f5e6;
+    --background-secondary: #fff;
+    --background-secondary-alt: #292b2f;
+    --background-tertiary: #202225;
+    --background-accent: #4f545c;
+    --background-floating: #18191c;
+    --background-mobile-primary: #36393f;
+    --background-mobile-secondary: #2f3136;
+    --background-modifier-hover: rgba(79,84,92,0.16);
+    --background-modifier-active: rgba(79,84,92,0.24);
+    --background-modifier-selected: rgba(79,84,92,0.32);
+    --background-modifier-accent: hsla(0,0%,100%,0.06);
+    --background-mentioned: rgba(250,166,26,0.05);
+    --background-mentioned-hover: rgba(250,166,26,0.08);
+    --background-message-hover: rgba(4,4,5,0.07);
+    --background-help-warning: rgba(250,166,26,0.1);
+    --background-help-info: rgba(0,176,244,0.1);
+    --scrollbar-thin-thumb: #202225;
+    --scrollbar-thin-track: transparent;
+    --scrollbar-auto-thumb: #202225;
+    --scrollbar-auto-track: #2e3338;
+    --scrollbar-auto-scrollbar-color-thumb: #202225;
+    --scrollbar-auto-scrollbar-color-track: #2f3136;
+    --elevation-stroke: 0 0 0 1px rgba(4,4,5,0.15);
+    --elevation-low: 0 1px 0 rgba(4,4,5,0.2),0 1.5px 0 rgba(6,6,7,0.05),0 2px 0 rgba(4,4,5,0.05);
+    --elevation-medium: 0 4px 4px rgba(0,0,0,0.16);
+    --elevation-high: 0 8px 16px rgba(0,0,0,0.24);
+    --logo-primary: #fff;
+    --focus-primary: #00b0f4;
+    --radio-group-dot-foreground: #8ea1e1;
+    --guild-header-text-shadow: 0 1px 1px rgba(0,0,0,0.4);
+    --channeltextarea-background: #40444b;
+    --activity-card-background: #202225;
+    --textbox-markdown-syntax: #8e9297;
+    --deprecated-card-bg: rgba(32,34,37,0.6);
+    --deprecated-card-editable-bg: rgba(32,34,37,0.3);
+    --deprecated-store-bg: #36393f;
+    --deprecated-quickswitcher-input-background: #72767d;
+    --deprecated-quickswitcher-input-placeholder: hsla(0,0%,100%,0.3);
+    --deprecated-text-input-bg: rgba(0,0,0,0.1);
+    --deprecated-text-input-border: rgba(0,0,0,0.3);
+    --deprecated-text-input-border-hover: #040405;
+    --deprecated-text-input-border-disabled: #202225;
+    --deprecated-text-input-prefix: #dcddde;
+}
+
+img.avatar {
+    border: 8px black;
+    border-radius: 50%
+}
+
+button {
+    background-color: #7289DA;
+    color: azure;
+    text-rendering: optimizeLegibility;
+    text-align: end;
+    -webkit-box-direction: reverse;
+    margin: 0;
+    border: 0;
+    outline: 0;
+    font-style: inherit;
+    font-family: inherit;
+    vertical-align: baseline;
+    text-decoration: none;
+    line-height: 24px;
+    cursor: pointer;
+    font-weight: 500;
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    box-sizing: border-box;
+    transition-property: background-color,color,box-shadow,-webkit-box-shadow;
+    transition-duration: .2s;
+    transition-timing-function: ease-in-out;
+    border-radius: 40px;
+    font-size: 14px;
+    padding: 7px 16px;
+    white-space: nowrap;
+    transition: box-shadow 1s;
+}
+
+html {
+    font-family: Whitney,Helvetica Neue,Helvetica,Arial,sans-serif;
+    background-color: #36393f;
+    color: #fafafa
+}
+
+a {
+    color: var(--text-link)
+}
+
+#buttoncontainer {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#buttoncontainer.button {
+    flex-grow: 1;
+    justify-self: center;
+}
+
+button.disabled {
+    cursor: not-allowed !important;
+    filter: opacity(0.5) !important
+}
+
+code {
+    text-rendering: optimizeLegibility;
+    -webkit-box-direction: normal;
+    color: var(--text-normal);
+    font-weight: inherit;
+    font-style: inherit;
+    vertical-align: baseline;
+    line-height: 1.125rem;
+    background: var(--background-secondary);
+    width: auto;
+    height: auto;
+    padding: .2em;
+    margin: -.2em 0;
+    border-radius: 3px;
+    font-size: 85%;
+    font-family: Consolas,Andale Mono WT,Andale Mono,Lucida Console,Lucida Sans Typewriter,DejaVu Sans Mono,Bitstream Vera Sans Mono,Liberation Mono,Nimbus Mono L,Monaco,Courier New,Courier,monospace;
+    text-indent: 0;
+    border: none;
+    white-space: pre-wrap;
+}
+
+code.inline {
+    width: auto;
+    height: auto;
+    padding: .2em;
+    margin: -.2em 0;
+    border-radius: 3px;
+    font-size: 85%;
+    font-family: Consolas,Andale Mono WT,Andale Mono,Lucida Console,Lucida Sans Typewriter,DejaVu Sans Mono,Bitstream Vera Sans Mono,Liberation Mono,Nimbus Mono L,Monaco,Courier New,Courier,monospace;
+    text-indent: 0;
+    border: none;
+    white-space: pre-wrap;
+}
+
+a,abbr,acronym,address,applet,big,blockquote,body,caption,cite,code,dd,del,dfn,div,dl,dt,em,fieldset,form,h1,h2,h3,h4,h5,h6,iframe,img,ins,kbd,label,legend,li,object,ol,p,pre,q,s,samp,small,span,strike,strong,table,tbody,td,tfoot,th,thead,tr,tt,ul,var {
+    font-weight: inherit;
+    font-style: inherit;
+    font-family: inherit;
+    vertical-align: baseline
+}
+
+bold, em {
+    font-weight: 800
+}
+
+
+p, span, h3, h4, h6, h6, div, body {
+    color: var(--text-normal);
+    font-family: Whitney,Helvetica Neue,Helvetica,Arial,sans-serif;
+}
+h1 {
+    color: var(--header-primary);
+}
+h2 {
+    color: var(--header-secondary)
+}
+
+a.copyme {
+    font-size: 16px;
+    text-decoration: none
+}
+
+@keyframes hl {
+  from {background-color: #42495e;}
+  to {background-color: inherit}
+}
+
+.highlighted {
+    animation: hl;
+    animation-duration: 5s;
+    animation-timing-function: ease-out
+}
+
+img.notloaded {
+    filter: blur(4px)
+}
+
+img.gif {
+    max-width: 512px;
+    max-height: 640px
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  background-color: #2e3338
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 4px;
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: #748ada; 
+  border-radius: 2px;
+}
+
+button a {
+    color: inherit;
+    text-decoration: none
+}
+
+@media only screen and (max-width: 720px) {
+    img.gif {
+        max-width: 90%
+    }
+    a.cap {
+        font-size: 12px;
+    }
+    a.cap::after {
+        content: "\[tap to enlarge or fix rendering issues]"
+    }
+}
