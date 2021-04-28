@@ -103,9 +103,9 @@ def invitebot(ref: str = "No Referrer", dnt: int = fastapi.Header(0), perms: int
                     referrer, referrals = await cursor.fetchone()
                     referrals = int(referrals)
                     if not referrer:
-                        await conn.execute("INSERT INTO referrers (id, referrals) VALUES (?, 1);", ref)
+                        await conn.execute("INSERT INTO referrers (id, referrals) VALUES (?);", (ref,))
                     else:
-                        await conn.execute("UPDATE referrers SET referrals=?", referrals + 1)
+                        await conn.execute("UPDATE referrers SET referrals=referrals+1 WHERE id=?", (referrer,))
                     await conn.commit()
                 except Exception as e:
                     print("Error while editing SQL", e, e.__class__.__name__)
