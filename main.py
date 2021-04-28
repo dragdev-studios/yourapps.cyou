@@ -99,7 +99,7 @@ def invitebot(ref: str = "No Referrer", dnt: int = fastapi.Header(0), perms: int
                 await conn.execute("CREATE TABLE IF NOT EXISTS referrers (id TEXT PRIMARY KEY NOT NULL, referrals INT DEFAULT 0);")
                 await conn.commit()
                 try:
-                    cursor = await conn.execute("SELECT (id, referrals) FROM referrers WHERE id=?", ref.lower())
+                    cursor = await conn.execute("SELECT (id, referrals) FROM referrers WHERE id=?", (ref.lower(),))
                     referrer, referrals = await cursor.fetchone()
                     referrals = int(referrals)
                     if not referrer:
