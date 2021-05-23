@@ -45,6 +45,7 @@ function createBox(id, status) {
 };
 
 async function query_status(shard_id=-1) {
+    const updater = document.getElementById("last-updated");
     if(lock===true) {
         console.debug("Lock is active, stopping scheduled HTTP request.")
     }
@@ -94,6 +95,8 @@ async function query_status(shard_id=-1) {
         }
     };
     lock = false;
+    var now = new Date();
+    updater.textContent = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 }
 
 window.addEventListener(
