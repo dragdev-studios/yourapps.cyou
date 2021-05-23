@@ -27,14 +27,13 @@
             width: 64px; 
             height: 64px; 
             cursor: pointer; 
-            /* display: flex;  */
             display: inline-flex;
             justify-content: center;
             align-items: baseline;
             align-content: space-between;
-            /* padding-top: 10px; */
             vertical-align: baseline;
             text-align: center;
+            border-radius: 16px;  /* round boi */
         }
         .StatusBox-noSize {
             min-width: 64px; 
@@ -45,17 +44,26 @@
             align-items: baseline;
             align-content: space-between;
         }
+        /* 
+        NOTE:
+        Some browsers don't yet support HEX+Alpha.
+        That's not our problem.
+        */
         ._5 {
             border: 2px solid #43b581; 
+            background-color: #43b581AA; 
         }
         ._2 {
             border: 2px solid #f1c40f;
+            background-color: #f1c40fAA;
         }
         ._1 {
             border: 2px solid #d64141;
+            background-color: #d64141AA;
         }
         ._0 {
-            border: 2px solid #b9bbbe
+            border: 2px solid #b9bbbe;
+            background-color: #b9bbbeAA
         }
 
     </style>

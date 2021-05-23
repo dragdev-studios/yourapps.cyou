@@ -169,23 +169,6 @@ def get_reviews_pairs(request: fastapi.Request, bot: int = 619328560141697036, l
         pairs
     )
 
-
-@app.post("/push", include_in_schema=False)
-async def update_time(req: fastapi.Request):
-    # Thank god for https://stackoverflow.com/q/59580376/13202421
-    def verify_signature(body):
-        received_sign = req.headers.get('X-Hub-Signature').split('sha1=')[-1].strip()
-        with open("./config.json") as file:  # this is actually just plain-text
-            secret = file.read().strip('"').encode()
-        expected_sign = HMAC(key=secret, msg=body, digestmod=sha1).hexdigest()
-        return compare_digest(received_sign, expected_sign)
-    if not verify_signature(await req.body()):
-        return fastapi.responses.Response(None, 403)
-    run("git fetch", shell=True)
-    run("git pull origin master", shell=True)
-    run("pm2 restart yourapps.cyou", shell=True)
-    return fastapi.responses.Response()
-
 app.add_api_route("/stylesheets/darktheme.css", lambda: fastapi.responses.RedirectResponse("//top.gg/stylesheets/darktheme.css", 308))
 
 if __name__ == "__main__":
