@@ -93,7 +93,6 @@ async function query_status(shard_id=-1) {
             console.debug(key, data.shards[key])
         }
     };
-    loading.remove();
     lock = false;
 }
 
