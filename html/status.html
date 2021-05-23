@@ -43,6 +43,8 @@
             justify-content: center;
             align-items: baseline;
             align-content: space-between;
+            border-radius: 4px;
+            max-width: 512px;
         }
         /* 
         NOTE:
@@ -70,22 +72,26 @@
 </head>
 
 <body>
-    <div style="margin-bottom: 10vh">
-        Key:
+    <p>Key:</p>
+    <div style="margin-bottom: 10vh;display: flex;text-align: center;width:100%;justify-content: space-between;">
         <div class="StatusBox-noSize _5">
-            online (Functioning as normal)
+            online<br>(Functioning as normal)
         </div>
         <div class="StatusBox-noSize _2">
-            degraded (may be slow or have increased failures)
+            degraded
+            <br>
+            (may be slow or have increased failures)
         </div>
         <div class="StatusBox-noSize _1">
-            Severely degraded performance (will be visibly slow and commands have a higher likelyhood of just failing)
+            Severely degraded performance<br>(will be visibly slow and commands have a higher likelyhood of just failing)
         </div>
         <div class="StatusBox-noSize _0">
-            Offline (Does not mean it isn't trying to redirect)
+            Offline<br>(Does not mean it isn't trying to redirect)
         </div>
         <br>
-        This page updates automatically every 5 seconds.
+    </div>
+    <div>
+        <p>This page updates automatically every 5 seconds.</p>
     </div>
     <div id="statuses" style="display: flex;justify-content: center;"></div>
 </body>
