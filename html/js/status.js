@@ -1,5 +1,6 @@
 var last_shard_count = 1;
 var BASE = "//ya.clicksminuteper.net";  // DO NOT CHANGE THIS unless you're experimenting.
+var lock = false;  // used to block concurrent requests.
 function createBox(id, status) {
     const statuses = {
         "0": {
@@ -44,8 +45,10 @@ function createBox(id, status) {
 };
 
 async function query_status(shard_id=-1) {
-    const loading = document.createElement("p");
-    loading.textContent = "Loading ...";
+    if(lock===true) {
+        console.debug("Lock is active, stopping scheduled HTTP request.")
+    }
+    lock = true;
     var online = 0;
     try {
         const response = await fetch(BASE+"/status?shard="+shard_id);
@@ -91,6 +94,7 @@ async function query_status(shard_id=-1) {
         }
     };
     loading.remove();
+    lock = false;
 }
 
 window.addEventListener(
