@@ -48,6 +48,7 @@ async function query_status(shard_id=-1) {
     const updater = document.getElementById("last-updated");
     if(lock===true) {
         console.debug("Lock is active, stopping scheduled HTTP request.")
+        return;
     }
     lock = true;
     var online = 0;
