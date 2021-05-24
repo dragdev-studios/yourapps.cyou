@@ -1,5 +1,5 @@
 var last_shard_count = 1;
-var BASE = "//ya.clicksminuteper.net";  // DO NOT CHANGE THIS unless you're experimenting.
+var BASE = "//api.yourapps.cyou";  // DO NOT CHANGE THIS unless you're experimenting.
 var lock = false;  // used to block concurrent requests.
 function createBox(id, status) {
     const statuses = {
@@ -79,8 +79,6 @@ async function query_status(shard_id=-1) {
         }
     } 
     catch (e) {
-        // createWarning(e, false);
-        console.error(e);
         data = {"shards": {}};
         for(let i=0;i<last_shard_count;i++) {
             data.shards[i.toString()] = {
