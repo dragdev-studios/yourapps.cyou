@@ -1,31 +1,38 @@
-from fastapi import FastAPI
-import fastapi
-from starlette.responses import RedirectResponse
-import uvicorn
-import requests
-from datetime import datetime
 import re
-from subprocess import run
-
-# from dash import app as dash
-from staticfiles import StaticFiles
-from reviews import find_reviews_section, soupify, scrape
-import reviews
-import aiosqlite
-from starlette.background import BackgroundTask
 import traceback
-from hmac import HMAC, compare_digest
-from hashlib import sha1
-import sys
+import asyncio
+from datetime import datetime
 
-app = FastAPI()
-app.mount("/html", StaticFiles(directory="html", html=True), name="static")
-# app.include_router(dash, prefix="/dash")
-cached_invite = {"url": None, "created_at": None}
+import aiosqlite
+import fastapi
+import requests
+import uvicorn
+from fastapi import FastAPI
+from starlette.background import BackgroundTask
 from starlette.middleware.cors import CORSMiddleware
 
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["GET", "POST"])
+import reviews
+from reviews import find_reviews_section, scrape, soupify
+from staticfiles import StaticFiles
 
+app = FastAPI()
+
+# Database setup
+app.state.loop = asyncio.get_event_loop()
+app.state.db = app.state.loop.run_until_complete(aiosqlite.connect("./data.base"))
+app.state.loop.run_until_complete(
+    app.state.db.execute(
+        """
+        CREATE TABLE IF NOT EXISTS referrers (
+            id TEXT PRIMARY KEY NOT NULL UNIQUE,
+            referrals INTEGER
+        );
+        """
+    )
+)
+app.state.loop.run_until_complete(app.state.db.commit())
+
+cached_invite = {"url": None, "created_at": None}
 
 def get_invite():
     if cached_invite["url"]:
@@ -46,18 +53,6 @@ def get_invite():
 @app.get("/favicon.ico")
 def get_icon():
     return fastapi.responses.RedirectResponse("/html/assets/avatar.png", 308, {"Cache-Control": "max-age=806400"})
-
-
-@app.get("/")
-def root():
-    # data =
-    with open("html/index.html") as rfile:
-        return fastapi.responses.HTMLResponse(rfile.read(), 200, {"Cache-Control": "max-age=806400"})
-
-
-@app.head("/")
-def up():
-    return fastapi.responses.Response(None, 200,)
 
 
 @app.get("/commands")
@@ -86,32 +81,41 @@ def vote_uri():
 
 @app.get("/invite")
 def invitebot(ref: str = "No Referrer", dnt: int = fastapi.Header(0), perms: int = 0):
-    u = (
-        f"https://discord.com/oauth2/authorize?client_id=619328560141697036"
-        f"&scope=bot%20guilds.join%20identify&permissions={perms}&response_type=code&redirect_uri=https%3A%2F%2Fya.clicksminuteper.net%2Fcallbacks%2Fauthorized"
+    from urllib.parse import quote
+    url = "https://discord.com/oauth2/authorize?client_id={}&permissions={}&scope=bot".format(
+        619328560141697036,
+        perms
     )
+    url += "&response_type=code&redirect_url="+quote("https://api.yourapps.cyou/callbacks/authorized")
     async def bg():
         pass  # prevent nameerror
-    if not dnt:
-        # we only query the database if they're allowing tracking. It's not really tracking but whatever, we'll be nice.
-        async def bg():
-            async with aiosqlite.connect("./data.base") as conn:
-                await conn.execute("CREATE TABLE IF NOT EXISTS referrers (id TEXT PRIMARY KEY NOT NULL, referrals INT DEFAULT 0);")
-                await conn.commit()
-                try:
-                    cursor = await conn.execute("SELECT (id, referrals) FROM referrers WHERE id=?", (ref.lower(),))
-                    referrer, referrals = await cursor.fetchone()
-                    referrals = int(referrals)
-                    if not referrer:
-                        await conn.execute("INSERT INTO referrers (id, referrals) VALUES (?);", (ref,))
-                    else:
-                        await conn.execute("UPDATE referrers SET referrals=referrals+1 WHERE id=?", (referrer,))
-                    await conn.commit()
-                except Exception as e:
-                    print("Error while editing SQL", e, e.__class__.__name__)
-                    traceback.print_exc()
 
-    return fastapi.responses.RedirectResponse(u, 308, {"Cache-Control": "max-age=806400"}, BackgroundTask(bg))
+    if dnt == 0:
+        async def bg():
+            cursor = await app.state.db.execute("SELECT referrals FROM referrers WHERE id=?;", (ref,))
+            count = await cursor.fetchone()
+            if not count:
+                # This is the first time this source has referred.
+                # We need to create a row.
+                await app.state.db.execute(
+                    """
+                    INSERT INTO referrers (id, referrals)
+                    VALUES (?, 1);
+                    """,
+                    (ref,)
+                )
+            else:
+                # Just need to increment
+                await app.state.db.execute(
+                    """
+                    UPDATE referrers
+                    SET referrals=`referrals`+1
+                    WHERE id=?;
+                    """,
+                    (ref,)
+                )
+            await app.state.db.commit()
+    return fastapi.responses.RedirectResponse(url, 308, {"Cache-Control": "max-age=806400"}, BackgroundTask(bg))
 
 
 @app.get("/support")
@@ -119,19 +123,13 @@ def support():
     return fastapi.responses.RedirectResponse(get_invite(), 308, {"Cache-Control": "max-age=86400"})
 
 
-@app.get("/admin/stats")
-def stats():
-    with open("html/stats.html") as file:
-        text = file.read()
-        return fastapi.responses.HTMLResponse(text)
-
-
-
 @app.get("/robots.txt")
 def robots():
     return fastapi.responses.RedirectResponse("/html/robots.txt", 308)
 
 
+# Get reviews from top.gg
+# NOTE: This is deprecated due to unreliability.
 def _get_reviews(request, bot, **kwargs):
     headers = dict(request.headers)
     headers.pop("accept-encoding", None)
@@ -147,7 +145,7 @@ def _get_reviews(request, bot, **kwargs):
 
 
 @app.get("/reviews", include_in_schema=False)
-@app.get("/ratings")
+@app.get("/ratings", deprecated=True)
 def get_reviews(request: fastapi.Request, bot: int = 619328560141697036, partial: bool = False):
     reviews = _get_reviews(request, bot)
     if partial:
@@ -159,7 +157,7 @@ def get_reviews(request: fastapi.Request, bot: int = 619328560141697036, partial
     return fastapi.responses.HTMLResponse(doc, 200)
 
 @app.get("/reviews/pairs", include_in_schema=False)
-@app.get("/ratings/pairs")
+@app.get("/ratings/pairs", deprecated=True)
 def get_reviews_pairs(request: fastapi.Request, bot: int = 619328560141697036, limit: int = 50):
     if limit == -1:
         limit = 999_999_999_999
@@ -169,7 +167,10 @@ def get_reviews_pairs(request: fastapi.Request, bot: int = 619328560141697036, l
         pairs
     )
 
-app.add_api_route("/stylesheets/darktheme.css", lambda: fastapi.responses.RedirectResponse("//top.gg/stylesheets/darktheme.css", 308))
+# Mount stuff
+app.add_middleware(CORSMiddleware, allow_origins=["https://*.dragdev.xyz", "https://yourapps.cyou"], allow_methods=["GET", "POST"])
+app.mount("/html", StaticFiles(directory="html", html=True))
+app.mount("/", StaticFiles(directory="html", html=True))
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", forwarded_allow_ips="*", proxy_headers=True, port=9126)
