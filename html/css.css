@@ -57,7 +57,9 @@
 
 img.avatar {
     border: 8px black;
-    border-radius: 50%
+    border-radius: 50%;
+    max-width: 256px;
+    max-height: 256px;
 }
 
 button {

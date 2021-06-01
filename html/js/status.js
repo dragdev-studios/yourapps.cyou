@@ -1,7 +1,7 @@
 var last_shard_count = 1;
 var BASE = "//api.yourapps.cyou";  // DO NOT CHANGE THIS unless you're experimenting.
 var lock = false;  // used to block concurrent requests.
-function createBox(id, status) {
+function createBox(id, status, latency) {
     const statuses = {
         "0": {
             "name": "offline",
@@ -29,12 +29,18 @@ function createBox(id, status) {
     box.id = id;
     let hiddenText = document.createElement("span");
     hiddenText.hidden = true;
-    hiddenText.textContent = `Shard ${id} - ${entry.name}`;
+    hiddenText.textContent = `Shard ${id}\n${entry.name}\n${latency}ms ping`;
     box.appendChild(hiddenText);
     let visibleText = document.createElement("span");
     visibleText.textContent = id;
     box.appendChild(visibleText);
-    box.addEventListener("click", () => {visibleText.hidden=!visibleText.hidden;hiddenText.hidden=!hiddenText.hidden});
+    box.addEventListener("click", () => {
+        visibleText.hidden=!visibleText.hidden;
+        hiddenText.hidden=!hiddenText.hidden;
+        // if(!hiddenText.hidden) {
+        //     lock = true; // this should stop any overwrites
+        // }
+    });
     existing = document.getElementById(id)
     if(existing) {
         existing.outerHTML = box.outerHTML;
@@ -74,7 +80,7 @@ async function query_status(shard_id=-1) {
                 if (data.shards[key].status !== 0) {
                     online++;
                 };
-                createBox(key, data.shards[key].status)
+                createBox(key, data.shards[key].status, data.shards[key].latency)
             }
         }
     } 
@@ -89,7 +95,7 @@ async function query_status(shard_id=-1) {
         console.warn("offline - Using cached values");
         console.debug("Cached values: ", JSON.stringify(data, null, 2))
         for(let key of Object.keys(data.shards)) {
-            createBox(key, data.shards[key].status)
+            createBox(key, data.shards[key].status, data.shards[key].latency)
             console.debug(key, data.shards[key])
         }
     };

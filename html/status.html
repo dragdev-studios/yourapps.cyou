@@ -69,6 +69,12 @@
         }
 
     </style>
+    <script>
+        if ('serviceWorker' in navigator) {
+            console.debug("registering service worker")
+            window.addEventListener('load', ()=>{navigator.serviceWorker.register('/html/js/sw.js');console.debug("SW added.")});
+        };
+    </script>
 </head>
 
 <body>
