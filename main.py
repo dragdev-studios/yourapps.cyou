@@ -34,6 +34,7 @@ app.state.loop.run_until_complete(app.state.db.commit())
 
 cached_invite = {"url": None, "created_at": None}
 
+
 def get_invite():
     if cached_invite["url"]:
         if (datetime.utcnow() - cached_invite["created_at"]).total_seconds() <= 43200:
