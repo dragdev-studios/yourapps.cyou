@@ -1,23 +1,49 @@
-import re
-import traceback
+from os import environ
+
 import asyncio
+import secrets
 from datetime import datetime
 
 import aiosqlite
 import fastapi
 import requests
 import uvicorn
-from fastapi import FastAPI
+from dotenv import load_dotenv
+from fastapi import FastAPI, Depends, HTTPException
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from starlette.background import BackgroundTask
 from starlette.middleware.cors import CORSMiddleware
 
-import reviews
-from reviews import find_reviews_section, scrape, soupify
+# from mounts.discord import app as DiscordApp
 from staticfiles import StaticFiles
 
-app = FastAPI()
+load_dotenv()
+environ.setdefault("ADMIN_USERNAME", "admin")
+environ.setdefault("ADMIN_PASSWORD", "0001")
 
-# Database setup
+
+app = FastAPI()
+# app.mount("/", DiscordApp)
+security = HTTPBasic()
+
+
+def verify_admin(realm: str = ""):
+    def function(c: HTTPBasicCredentials = Depends(security)):
+        correct_username = secrets.compare_digest(c.username, environ["ADMIN_USERNAME"])
+        correct_password = secrets.compare_digest(c.password, environ["ADMIN_PASSWORD"])
+        authed = (correct_username and correct_password)
+        if correct_username is False or correct_password is False:
+            raise HTTPException(
+                401,
+                detail="Incorrect username or password",
+                headers={
+                    "WWW-Authenticate": "Basic, realm=\"{}\"".format(realm.replace("\"", r"\""))
+                }
+            )
+        return authed
+    return function
+
+
 app.state.loop = asyncio.get_event_loop()
 app.state.db = app.state.loop.run_until_complete(aiosqlite.connect("./data.base"))
 app.state.loop.run_until_complete(
@@ -25,16 +51,17 @@ app.state.loop.run_until_complete(
         """
         CREATE TABLE IF NOT EXISTS referrers (
             id TEXT PRIMARY KEY NOT NULL UNIQUE,
-            referrals INTEGER
+            referrals INTEGER,
+            source TEXT NOT NULL CHECK (source IN (query|header))
         );
         """
     )
 )
-app.state.loop.run_until_complete(app.state.db.commit())
 
 cached_invite = {"url": None, "created_at": None}
 
 
+# noinspection PyTypeChecker
 def get_invite():
     if cached_invite["url"]:
         if (datetime.utcnow() - cached_invite["created_at"]).total_seconds() <= 43200:
@@ -49,6 +76,9 @@ def get_invite():
         return invite
     except (KeyError, RuntimeError):
         return "https://discord.gg/T9u3Qcm"
+
+
+# async def add_referral(key: str, table_name: str = "referrals"):
 
 
 @app.get("/favicon.ico")
@@ -67,17 +97,26 @@ def commands():
 
 
 @app.get("/stats")
-def pstats():
-    return fastapi.responses.HTMLResponse(
-        open("html/pstats.html").read(), 200, {"Cache-Control": "public,max-age=806400"}
+async def statistics(authorized: bool = Depends(verify_admin("Analytics"))):
+    if authorized is False:
+        # depends should automatically return the forbidden header if auth failed
+        raise HTTPException(500, detail={"detail": "Unexpected condition. Failing for security reasons."})
+
+    data = {}
+
+    async with aiosqlite.connect("./data.base") as connection:
+        connection.row_factory = aiosqlite.Row
+        async for row in await connection.execute("""SELECT id, referrals FROM referrers ORDER BY referrals DESC;"""):
+            data[row["id"]] = row["referrals"]
+
+    return fastapi.responses.JSONResponse(
+        data
     )
-    # also dynamic
 
 
 @app.get("/vote")
 def vote_uri():
     return fastapi.responses.HTMLResponse("https://top.gg/bot/619328560141697036/vote", 308)
-
 
 
 @app.get("/invite")
@@ -88,6 +127,7 @@ def invitebot(ref: str = "No Referrer", dnt: int = fastapi.Header(0), perms: int
         perms
     )
     url += "&response_type=code&redirect_url="+quote("https://api.yourapps.cyou/callbacks/authorized")
+
     async def bg():
         pass  # prevent nameerror
 
@@ -129,47 +169,9 @@ def robots():
     return fastapi.responses.RedirectResponse("/html/robots.txt", 308)
 
 
-# Get reviews from top.gg
-# NOTE: This is deprecated due to unreliability.
-def _get_reviews(request, bot, **kwargs):
-    headers = dict(request.headers)
-    headers.pop("accept-encoding", None)
-    headers.pop("host", None)
-    headers["accept"] = "text/html;q=0.9,text/plain;q=0.8"
-    
-    soup = soupify(scrape("/bot/"+str(bot), headers=headers))
-    if kwargs.pop("return_soup", False):
-        return soup
-
-    reviews = find_reviews_section(soup, string=kwargs.pop("string", True))
-    return reviews
-
-
-@app.get("/reviews", include_in_schema=False)
-@app.get("/ratings", deprecated=True)
-def get_reviews(request: fastapi.Request, bot: int = 619328560141697036, partial: bool = False):
-    reviews = _get_reviews(request, bot)
-    if partial:
-        return fastapi.responses.HTMLResponse(reviews, 200, {"Cache-Control": "max-age=3600"})
-    with open("./template.html") as rfile:
-        doc = rfile.read()
-    doc = doc.format(reviews)
-    doc = re.sub(r"opacity:[\s]?0[;]?", "", doc)
-    return fastapi.responses.HTMLResponse(doc, 200)
-
-@app.get("/reviews/pairs", include_in_schema=False)
-@app.get("/ratings/pairs", deprecated=True)
-def get_reviews_pairs(request: fastapi.Request, bot: int = 619328560141697036, limit: int = 50):
-    if limit == -1:
-        limit = 999_999_999_999
-    soup = _get_reviews(request, bot, return_soup=True)
-    pairs = reviews.pair_reviews(soup, limit)
-    return fastapi.responses.JSONResponse(
-        pairs
-    )
-
 # Mount stuff
-app.add_middleware(CORSMiddleware, allow_origins=["https://*.dragdev.xyz", "https://yourapps.cyou"], allow_methods=["GET", "POST"])
+app.add_middleware(CORSMiddleware, allow_origins=["https://*.dragdev.xyz", "https://yourapps.cyou"],
+                   allow_methods=["GET", "POST"])
 app.mount("/html", StaticFiles(directory="html", html=True))
 app.mount("/", StaticFiles(directory="html", html=True))
 
