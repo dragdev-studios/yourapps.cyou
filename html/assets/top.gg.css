@@ -10,6 +10,9 @@
     border-radius: 50%;
     border: 2px solid black;
     transition: transform 1s ease-in-out;
+    max-width: 512px;
+    max-height: 512px;
+    border: 1px solid black;
 }
 
 .entity-header__image:hover {
@@ -18,12 +21,6 @@
 
 .entity-content__description {
     padding: 8px;
-}
-
-main > img {
-    max-width: 512px;
-    max-height: auto;
-    border: 1px solid black;
 }
 
 .cIdQeE, .cEhIlR, .cEhIlR {  /* Review Stars */
@@ -65,12 +62,17 @@ a[href="https://top.gg/bot/619328560141697036/vote"] div {
     background-color: #43b581
 }
 
-.star, .eRilSU {
+.star, .eRilSU, .star path {
     fill: #43b581 !important;
     color: #43b581 !important;
+    border-color: none;
 }
 
-a img {
+main div p a img {
     border: 2px solid black;
     border-radius: 2px
+}
+
+article section:nth-child(4) div {
+    display: none  /* Random ass blank padding */
 }
