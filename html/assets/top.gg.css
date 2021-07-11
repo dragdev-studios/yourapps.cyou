@@ -68,19 +68,9 @@ a[href="https://top.gg/bot/619328560141697036/vote"] div {
 .star, .eRilSU {
     fill: #43b581 !important;
     color: #43b581 !important;
-    background: #43b581 !important
 }
 
 a img {
     border: 2px solid black;
     border-radius: 2px
 }
-
-/* span[content="5 stars"] ~ progress::-webkit-progress-value::-moz-progress-bar {
-    color: #43b581 !important
-}
-span[content="5 stars"] ~ progress {
-    background: #43b581
-} */
-/* The above doesn't work. WHY?!?!?!?!??!?!?!??!? */
-
