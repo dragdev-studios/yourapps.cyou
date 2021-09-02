@@ -20,7 +20,7 @@ from staticfiles import StaticFiles
 load_dotenv()
 environ.setdefault("ADMIN_USERNAME", "admin")
 environ.setdefault("ADMIN_PASSWORD", "0001")
-environ.setdefault("BOT_TOKEN", None)
+environ.setdefault("BOT_TOKEN", "")
 
 
 app = FastAPI()
