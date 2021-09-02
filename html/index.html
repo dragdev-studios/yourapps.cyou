@@ -63,7 +63,7 @@
 		}
     </style>
     <script src="/html/js/index.js"></script>
-    <script>window.addEventListener("load", () => {setServers(); setIcon()}, {capture: false});</script>
+    <script>window.addEventListener("load", () => {setServers();document.getElementById("icon").src="/avatar"}, {capture: false});</script>
 	<script src="/html/js/lazysizes.min.js" type="application/javascript"></script>
 </head>
 
@@ -72,7 +72,7 @@
 		<h1 style="color: red"><em>This page is very dynamic, and works a lot better with javascript enabled. While you can continue to use this site with javascript disabled, you should enable it.</em></h1><hr></noscript>
 	<h1 style="text-align:center">YourApps</h1>
 	<div style="text-align:center">
-		<img src="/html/assets/lowresya.jpeg" onload="()=>{this.src = '/avatar'}" class="avatar notloaded" id="icon" alt="yourapps" /><br>
+		<img src="/html/assets/lowresya.jpeg" class="avatar notloaded" id="icon" alt="yourapps" /><br>
         <p id="count">~900 servers! (loading)</p><br>
         <div>
             <h3 style="text-align: middle">Quick Links</h3>
