@@ -107,6 +107,10 @@ def get_avatar(_format: str = "webp"):
     except Exception:
         return f"https://cdn.discordapp.com/embed/avatars/{5601%5}.png"
 
+@app.get("/bot-stats")
+def stats():
+    return requests.get("https://api.yourapps.cyou/meta/stats").json()
+
 
 @app.get("/commands")
 def commands():

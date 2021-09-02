@@ -30,7 +30,7 @@ function createWarning(e, fatal = false) {
 
 function setServers() {
     try {
-        const response = fetch_json("https://api.yourapps.cyou/meta/stats");
+        const response = fetch_json("/bot-stats");
         response.then(
             (data) => {document.getElementById("count").textContent = data.guilds + " servers!"}
         );
