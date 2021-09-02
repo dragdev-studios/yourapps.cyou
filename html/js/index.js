@@ -30,7 +30,7 @@ function createWarning(e, fatal = false) {
 
 function setServers() {
     try {
-        const response = fetch_json("https://ya.clicksminuteper.net/api/v1/bot/stats");
+        const response = fetch_json("https://api.yourapps.cyou/meta/stats");
         response.then(
             (data) => {document.getElementById("count").textContent = data.guilds + " servers!"}
         );
@@ -40,16 +40,3 @@ function setServers() {
         return createWarning(e);
     };
 };
-
-async function setIcon() {
-    try {
-        const data = await fetch_json("https://ya.clicksminuteper.net/api/bot/icon");
-        const icon = document.getElementById("icon");
-        icon.src = data.url;
-        icon.onerror = (e) => {console.log("Icon error"); createWarning(e)};
-        icon.addEventListener("load", () => {icon.classList.remove("notloaded")}, {capture: false});
-    }
-    catch (e) {
-        return createWarning(e);
-    };
-}

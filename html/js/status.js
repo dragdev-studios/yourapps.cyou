@@ -59,7 +59,7 @@ async function query_status(shard_id=-1) {
     lock = true;
     var online = 0;
     try {
-        const response = await fetch(BASE+"/status?shard="+shard_id);
+        const response = await fetch(BASE+"/meta/status");
         var data;
         if([500, 501, 502, 503, 504].includes(response.status)) {
             data = {"shards": {}};
@@ -77,10 +77,19 @@ async function query_status(shard_id=-1) {
         
         if(shard_id==-1) {
             for(let key of Object.keys(data.shards)) {
-                if (data.shards[key].status !== 0) {
-                    online++;
+                if(!data.shards[key].online) {
+                    createBox(key, "0", 99999999);
                 };
-                createBox(key, data.shards[key].status, data.shards[key].latency)
+                let latency = data.shards[key].latency;
+                if(latency>1000) {
+                    createBox(key, "2", latency);
+                }
+                else if (latency > 200) {
+                    createBox(key, "1", latency);
+                }
+                else {
+                    createBox(key, "5", latency);
+                };
             }
         }
     } 

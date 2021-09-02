@@ -20,6 +20,7 @@ from staticfiles import StaticFiles
 load_dotenv()
 environ.setdefault("ADMIN_USERNAME", "admin")
 environ.setdefault("ADMIN_PASSWORD", "0001")
+environ.setdefault("BOT_TOKEN", None)
 
 
 app = FastAPI()
@@ -84,6 +85,27 @@ def get_invite():
 @app.get("/favicon.ico")
 def get_icon():
     return fastapi.responses.RedirectResponse("/html/assets/avatar.png", 308, {"Cache-Control": "max-age=806400"})
+
+
+@app.get("/avatar.png", include_in_schema=False)
+def get_avatar(_format: str = "webp"):
+    if not environ["BOT_TOKEN"]:
+        raise HTTPException(503)
+    if _format not in ["webp", "png"]:
+        raise HTTPException(400)
+    try:
+        response = requests.get(
+            "https://discord.com/api/users/619328560141697036",
+            headers={
+                "Authorisation": "Bot " + environ["BOT_TOKEN"]
+            }
+        )
+        return "https://cdn.discordapp.com/avatars/619328560141697036/{}.{}".format(
+            response.json()["avatar"],
+            _format
+        )
+    except Exception:
+        return f"https://cdn.discordapp.com/embed/avatars/{5601%5}.png"
 
 
 @app.get("/commands")
