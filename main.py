@@ -87,6 +87,11 @@ def get_icon():
     return fastapi.responses.RedirectResponse("/html/assets/avatar.png", 308, {"Cache-Control": "max-age=806400"})
 
 
+@app.get("/goodbye")
+def goodbye():
+    return fastapi.responses.RedirectResponse("https://discord.gg/FBygPcymed?event=923623597489156167", 308)
+
+
 @app.get("/avatar.png", include_in_schema=False)
 def get_avatar(_format: str = "webp"):
     if not environ["BOT_TOKEN"]:
