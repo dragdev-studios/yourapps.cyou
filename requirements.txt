@@ -17,7 +17,7 @@ itsdangerous==1.1.0
 jinja2==2.11.3
 markupsafe==1.1.1
 multidict==5.1.0
-pillow==8.3.2
+pillow==9.3.0
 pydantic==1.7.4
 python-multipart==0.0.5
 pyyaml==5.4.1
